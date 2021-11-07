@@ -51,11 +51,9 @@ api = Api(app)
 class ArticleList(Resource):
         def get(self):
                 article_json = articlescraper()
-                print("hello!")
                 return article_json, 200
 
 api.add_resource(ArticleList, '/articles')
 
 if __name__ == '__main__':
         app.run(debug=True)
-        print("hello?")
