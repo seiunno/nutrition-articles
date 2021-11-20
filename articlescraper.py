@@ -5,15 +5,25 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from flask import Flask
 from flask_restful import Resource, Api
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 
 def articlescraper():
 
         json_obj = {}
         json_obj['articles'] = []
 
-        opt = webdriver.ChromeOptions()
-        opt.add_argument("--incognito")
-        browser = webdriver.Chrome()
+        service = Service(ChromeDriverManager().install())
+
+        options = Options()
+        options.add_argument("--headless")
+        options.add_argument("--incognito")
+
+        driver = webdriver.Chrome(
+                service=service,
+                options=options
+        )
 
         req = requests.get('https://www.everydayhealth.com/diet-nutrition/all-articles/')
         soup = BeautifulSoup(req.content, 'html.parser')
@@ -36,14 +46,10 @@ def articlescraper():
                         print("error")
                         pass
 
-        with open('articles.json', 'w') as jsonFile:
-                json.dump(json_obj, jsonFile)
-
-        browser.close()
-        browser.quit()
+        driver.close()
+        driver.quit()
 
         return json_obj
-        # return jsonFile
 
 app = Flask(__name__)
 api = Api(app)
