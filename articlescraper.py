@@ -46,7 +46,6 @@ def articlescraper():
 
                         json_obj['articles'].append(entry)
                 except KeyError:
-                        print("error")
                         pass
 
         driver.close()
