@@ -1,8 +1,6 @@
-import json
 from bs4 import BeautifulSoup
 import requests
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from flask import Flask
 from flask_restful import Resource, Api
 from webdriver_manager.chrome import ChromeDriverManager
