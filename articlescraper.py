@@ -9,21 +9,24 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
+service = Service(ChromeDriverManager().install())
+
+options = Options()
+options.add_argument("--headless")
+options.add_argument("--incognito")
+
+driver = webdriver.Chrome(
+        service=service,
+        options=options
+)
+
 def articlescraper():
+        """
+        Scrapes domain Everyday Health for nutrition articles
+        """
 
         json_obj = {}
         json_obj['articles'] = []
-
-        service = Service(ChromeDriverManager().install())
-
-        options = Options()
-        options.add_argument("--headless")
-        options.add_argument("--incognito")
-
-        driver = webdriver.Chrome(
-                service=service,
-                options=options
-        )
 
         req = requests.get('https://www.everydayhealth.com/diet-nutrition/all-articles/')
         soup = BeautifulSoup(req.content, 'html.parser')
