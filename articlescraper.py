@@ -18,16 +18,15 @@ driver = webdriver.Chrome(
         options=options
 )
 
-def articlescraper():
+req = requests.get('https://www.everydayhealth.com/diet-nutrition/all-articles/')
+soup = BeautifulSoup(req.content, 'html.parser')
+
+def nutritionarticlescraper():
         """
         Scrapes domain Everyday Health for nutrition articles
         """
-
         json_obj = {}
         json_obj['articles'] = []
-
-        req = requests.get('https://www.everydayhealth.com/diet-nutrition/all-articles/')
-        soup = BeautifulSoup(req.content, 'html.parser')
 
         for each in soup.findAll('article',{'class':'category-index-article category-index-article--regular'}):
                 try:
@@ -46,20 +45,20 @@ def articlescraper():
                 except KeyError:
                         pass
 
-        driver.close()
-        driver.quit()
-
         return json_obj
+
+driver.close()
+driver.quit()
 
 app = Flask(__name__)
 api = Api(app)
 
-class ArticleList(Resource):
+class NutritionArticleList(Resource):
         def get(self):
-                article_json = articlescraper()
+                article_json = nutritionarticlescraper()
                 return article_json, 200
 
-api.add_resource(ArticleList, '/articles')
+api.add_resource(NutritionArticleList, '/articles')
 
 if __name__ == '__main__':
         app.run(debug=True)
